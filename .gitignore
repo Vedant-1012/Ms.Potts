@@ -1,0 +1,14 @@
+# Ignore environment files
+.env
+__pycache__/
+*.pyc
+
+# Ignore system files
+.DS_Store
+
+# Ignore Docker stuff if any
+*.dockerfile
+*.tar
+
+# Ignore VS Code settings if any
+.vscode/
