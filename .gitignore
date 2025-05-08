@@ -12,3 +12,5 @@ __pycache__/
 
 # Ignore VS Code settings if any
 .vscode/
+
+WHO_NHD_00.6.pdf
