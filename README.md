@@ -29,10 +29,6 @@ Ms. Potts is an AI-powered nutrition chatbot that provides meal recommendations,
 
 ---
 
-## Demo Screenshots
-(Add screenshots of your UI here)
-
----
 
 ## License
 

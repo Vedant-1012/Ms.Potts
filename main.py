@@ -1,10 +1,12 @@
-# main.py
-
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from model_gemini import GeminiModel
-import uvicorn
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env locally
+load_dotenv()
 
 app = FastAPI()
 
@@ -16,7 +18,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize GeminiModel ONCE
+# Health check
+@app.get("/")
+def health_check():
+    return {"status": "Ms. Potts backend is live!"}
+
+# Initialize GeminiModel (OK for local use where env is already loaded)
 model = GeminiModel()
 
 @app.post("/query")
@@ -30,7 +37,7 @@ async def query_endpoint(request: Request):
         print(f"✅ Received Context: {user_context}")
 
         response = model.get_response(query, user_context)
-        
+
         print(f"✅ GeminiModel Response: {response}")
 
         return JSONResponse({
@@ -42,5 +49,7 @@ async def query_endpoint(request: Request):
         print(f"❌ Exception inside /query: {e}")
         return JSONResponse({"error": str(e)}, status_code=500)
 
+# Uncomment if you want to run it locally via `python main.py`
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)

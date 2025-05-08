@@ -1,7 +1,9 @@
 import json
 import logging
 import google.generativeai as genai
-from retriever import Retriever
+# from retriever import Retriever
+from retriever_who import WHOBookRetriever
+
 from potts import IntentClassifier
 from tools import meal_logging, meal_planning
 from dotenv import load_dotenv
@@ -16,9 +18,10 @@ class GeminiModel:
         try:
             genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
             self.model = genai.GenerativeModel("gemini-1.5-flash")
-
             self.intent_classifier = IntentClassifier()
-            self.retriever = Retriever()
+            # self.retriever = Retriever()
+            self.retriever = WHOBookRetriever()
+
         except Exception as e:
             logger.error(f"Initialization error: {e}")
             raise
@@ -46,15 +49,10 @@ class GeminiModel:
                     "context_used": context
                 }
 
-            # Meal logging
             if top_intent == "Meal-Logging":
                 return meal_logging(query, user_context)
-
-            # Meal planning
             elif top_intent == "Meal-Planning-Recipes":
                 return meal_planning(user_context)
-
-            # Educational & Personalized advice
             else:
                 user_profile_str = f"User Profile: {json.dumps(user_context)}" if user_context else ""
                 full_prompt = f"""
@@ -89,15 +87,3 @@ class GeminiModel:
                 "detected_intent": None,
                 "context_used": ""
             }
-
-if __name__ == "__main__":
-    model = GeminiModel()
-    response = model.get_response("Is quinoa better than rice for protein?", user_context={
-        "age": 24,
-        "sex": "male",
-        "height": 175,
-        "weight": 70,
-        "activity_level": "moderate",
-        "allergies": "peanuts"
-    })
-    print(json.dumps(response, indent=2))

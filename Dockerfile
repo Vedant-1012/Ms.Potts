@@ -1,23 +1,23 @@
-# Dockerfile
+# Dockerfile for Ms. Potts Backend (FastAPI)
 
-# Use official Python image
 FROM python:3.11-slim
+
+# Prevent interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y build-essential
-
-# Copy requirements and install Python packages
+# Install dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Copy the entire app
+# Copy all backend code
 COPY . .
 
-# Expose port (very important for Cloud Run!)
+# Expose FastAPI backend port
 EXPOSE 8080
 
-# Command to run app
-CMD ["python", "main.py"]
+# Start the FastAPI app with Uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]

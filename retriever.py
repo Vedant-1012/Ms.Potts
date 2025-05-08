@@ -29,7 +29,7 @@ class Retriever:
         similarities = np.dot(self.knowledge_embeddings, query_norm) / knowledge_norms
 
         max_score = np.max(similarities)
-        if max_score < 0.30:
+        if max_score < 0.15:
             return "OUT_OF_SCOPE: This question is outside nutrition domain."
         
         most_relevant_idx = np.argmax(similarities)

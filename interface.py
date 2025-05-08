@@ -62,7 +62,7 @@ def chat_page():
         }
         try:
             # Send POST to localhost:8001/query
-            response = requests.post("http://localhost:8001/query", json=payload)
+            response = requests.post("http://localhost:8080/query", json=payload)
             response_json = response.json()
 
             final_answer = response_json.get("final_answer", "No answer received.")
